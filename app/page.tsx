@@ -334,31 +334,23 @@ export default function PechaKucha() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout
-    let internalTimer = timer // Internal timer for tracking actual time
 
     if (isPlaying) {
       interval = setInterval(() => {
         setTimer((prev) => {
-          // For the last slide, count down at half speed (40 seconds real time)
-          if (currentSlide === slides.length - 1) {
-            internalTimer -= 0.5
-            // Show the rounded number that's double the actual progress
-            return Math.ceil(prev - 0.5)
-          } else {
-            if (prev <= 1) {
-              nextSlide()
-              return 20
-            }
-            return prev - 1
+          if (prev <= 1) {
+            nextSlide()
+            return 20
           }
+          return prev - 1
         })
       }, 1000)
     }
 
     return () => clearInterval(interval)
-  }, [isPlaying, currentSlide])
+  }, [isPlaying])
 
-  // Calculate progress percentage (adjusted for visual consistency)
+  // Calculate progress percentage
   const progressPercentage = (timer / 20) * 100
 
   return (
@@ -450,7 +442,7 @@ export default function PechaKucha() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="text-white/80 font-mono text-lg">{Math.ceil(timer)}s</div>
+          <div className="text-white/80 font-mono text-lg">{timer}s</div>
           <div className="text-white/80 bg-white/10 px-3 py-1 rounded-full text-sm">
             {currentSlide + 1}/{slides.length}
           </div>
